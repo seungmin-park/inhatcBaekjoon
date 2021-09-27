@@ -1,8 +1,9 @@
 package inhatc.inhatcbaekjoon.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import inhatc.inhatcbaekjoon.api.SolvedApi;
 import inhatc.inhatcbaekjoon.domain.Member;
 import inhatc.inhatcbaekjoon.domain.MemberForm;
+import inhatc.inhatcbaekjoon.domain.University;
 import inhatc.inhatcbaekjoon.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,15 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -30,6 +26,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final SolvedApi solvedApi;
 
     @GetMapping("/members/new")
     public String createForm(Model model){
@@ -40,7 +37,7 @@ public class MemberController {
     @SneakyThrows
     @PostMapping("/members/new")
     public String create(@Valid MemberForm memberForm, BindingResult result){
-        Member member = new Member(memberForm.getName(), memberForm.getEmail(), memberForm.getBJName(), findRatingByBJName(memberForm.getBJName()));
+        Member member = new Member(memberForm.getName(), memberForm.getEmail(), memberForm.getBJName(), solvedApi.getUserInfo(memberForm.getBJName()));
         memberService.join(member);
         return "redirect:/";
     }
@@ -53,21 +50,9 @@ public class MemberController {
         return "members/memberList";
     }
 
-    private Integer findRatingByBJName(String BJName) throws IOException, InterruptedException {
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://solved.ac/api/v3/search/user?query="+BJName))
-                .header("Content-Type", "application/json")
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-        ObjectMapper obj = new ObjectMapper();
-        HashMap<String, Object> map = obj.readValue(response.body(), HashMap.class);
-        ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) map.get("items");
-        HashMap<String, Object> objectHashMap = list.get(0);
-
-        return (Integer) objectHashMap.get("rating");
+    @ResponseBody
+    @GetMapping("/rank")
+    public University university() throws IOException, InterruptedException {
+        return solvedApi.universityRank();
     }
-
 }

@@ -1,18 +1,10 @@
 package inhatc.inhatcbaekjoon.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import inhatc.inhatcbaekjoon.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Repository
