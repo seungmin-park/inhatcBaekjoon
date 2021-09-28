@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <p style="text-align: right">
+            <a href="https://www.acmicpc.net/" style="text-align: right">BeakJoon</a>
+            <a href="https://solved.ac/">solved.ac</a>
+        </p>
+        <table class="table table-striped" th:border="1">
+            <thead th:align="center">
+            <tr>
+                <th>우리학교정보</th>
+                <th colspan="2">순위</th>
+                <th>학교이름</th>
+                <th>학교순위</th>
+                <th>점수</th>
+                <th>점수차이</th>
+            </tr>
+            </thead>
+            <tbody th:align="center">
+            <tr th:value="${university}">
+                <td rowspan="2">
+                    <span th:text="${university.universityName}">내학교이름</span><br>
+                    <span th:text="|Score : ${university.myUniversityRating}|">내학교점수</span><br>
+                </td>
+                <td colspan="2">(대학)
+                <span th:text="${university.myUniversityRank}" style="margin-left: 27px">내학교 순위</span>
+                </td>
+                <td th:text="${university.competitionUniversityName}">상대학교이름</td>
+                <td th:text="${university.competitionUniversityRank}">상대학교순위</td>
+                <td th:text="${university.competitionUniversityRating}">상대학교점수</td>
+                <td th:text="${university.ratingDifference}">점수차이</td>
+            </tr>
+            <tr th:value="${university}">
+                <td colspan="2">(전체)
+                    <span th:text="${university.myUniversityGlobalRank}">내학교순위</span>
+                </td>
+                <td th:text="${university.competitionUniversityName}">상대학교이름</td>
+                <td th:text="${university.competitionUniversityRank}">상대학교순위</td>
+                <td th:text="${university.competitionUniversityRating}">상대학교점수</td>
+                <td th:text="${university.ratingDifference}">점수차이</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

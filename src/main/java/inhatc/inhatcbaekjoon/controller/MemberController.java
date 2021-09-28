@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -50,9 +51,17 @@ public class MemberController {
         return "members/memberList";
     }
 
-    @ResponseBody
+
     @GetMapping("/rank")
-    public University university() throws IOException, InterruptedException {
-        return solvedApi.universityRank();
+    public String rankInfo(Model model) throws IOException, InterruptedException {
+        University university = solvedApi.universityRank();
+        model.addAttribute("university", university);
+        return "rank/rankInfo";
+    }
+
+    @PostConstruct
+    public void createMember() throws IOException, InterruptedException {
+        Member member = new Member("박승민","201844050@itc.ac.kr","tmddudals369", solvedApi.getUserInfo("tmddudals369"));
+        memberService.join(member);
     }
 }
