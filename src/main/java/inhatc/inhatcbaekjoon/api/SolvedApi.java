@@ -1,8 +1,10 @@
 package inhatc.inhatcbaekjoon.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inhatc.inhatcbaekjoon.domain.BaekJoon;
+import inhatc.inhatcbaekjoon.domain.Tier;
 import inhatc.inhatcbaekjoon.domain.University;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-@Component
+@Service
 public class SolvedApi {
     public SolvedApi() {
     }
@@ -21,9 +23,9 @@ public class SolvedApi {
     private String userInfoUrl = "https://solved.ac/api/v3/user/show?handle=";
     private String universityInfoUrl = "https://solved.ac/api/v3/ranking/organization?";
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper obj = new ObjectMapper();
 
-    public int getUserInfo(String BJName) throws IOException, InterruptedException {
+    public BaekJoon getUserInfo(String BJName) throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(userInfoUrl+BJName))
@@ -32,10 +34,12 @@ public class SolvedApi {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-        ObjectMapper obj = new ObjectMapper();
         HashMap<String, Object> paramMap = obj.readValue(response.body(), HashMap.class);
 
-        return (int)paramMap.get("rating");
+        Tier[] tiers = Tier.values();
+        Tier tier = tiers[(int) paramMap.get("tier") - 1];
+        int rating = (int) paramMap.get("rating");
+        return new BaekJoon(BJName,rating,tier);
     }
 
     /**
@@ -57,7 +61,6 @@ public class SolvedApi {
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            ObjectMapper obj = new ObjectMapper();
             HashMap<String, Object> paramMap = obj.readValue(response.body(), HashMap.class);
             ArrayList<LinkedHashMap> items = (ArrayList<LinkedHashMap>) paramMap.get("items");
 

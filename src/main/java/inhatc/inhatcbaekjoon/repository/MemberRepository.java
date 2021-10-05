@@ -3,7 +3,6 @@ package inhatc.inhatcbaekjoon.repository;
 import inhatc.inhatcbaekjoon.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -23,12 +22,12 @@ public class MemberRepository {
     }
 
     public List<Member> findAll(){
-        return em.createQuery("select m from Member m",Member.class)
+        return em.createQuery("select m from Member m order by m.baekJoon.rating desc ",Member.class)
                 .getResultList();
     }
 
     public List<Member> findByEmail(String email){
-        return em.createQuery("select m from Member m where email =: email",Member.class)
+        return em.createQuery("select m from Member m where m.email =: email",Member.class)
                 .setParameter("email",email)
                 .getResultList();
     }

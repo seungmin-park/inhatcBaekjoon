@@ -28,16 +28,16 @@ public class SolvedApiTest {
         int globalCompetitionUniversityRank = university.getGlobalCompetitionUniversityRank();
         int globalCompetitionUniversityRating = university.getGlobalCompetitionUniversityRating();
         //then
-        assertThat(myUniversityRank).isEqualTo(63);
-        assertThat(myUniversityGlobalRank).isEqualTo(133);
+        assertThat(myUniversityRank).isEqualTo(64);
+        assertThat(myUniversityGlobalRank).isEqualTo(135);
         assertThat(myUniversityRating).isEqualTo(1684);
 
         assertThat(competitionUniversityName).isEqualTo("상명대학교(천안)");
-        assertThat(competitionUniversityRank).isEqualTo(62);
+        assertThat(competitionUniversityRank).isEqualTo(63);
         assertThat(competitionUniversityRating).isEqualTo(1685);
 
         assertThat(globalCompetitionUniversityName).isEqualTo("상명대학교(천안)");
-        assertThat(globalCompetitionUniversityRank).isEqualTo(132);
+        assertThat(globalCompetitionUniversityRank).isEqualTo(134);
         assertThat(globalCompetitionUniversityRating).isEqualTo(1685);
     }
 }

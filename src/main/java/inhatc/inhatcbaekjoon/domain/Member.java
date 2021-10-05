@@ -3,10 +3,7 @@ package inhatc.inhatcbaekjoon.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -14,19 +11,21 @@ import javax.persistence.Id;
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
     private String name;
     private String email;
-    private String BJName;
-    private Integer rating;
 
-    public Member(String name, String email, String BJName, Integer rating) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bjname")
+    private BaekJoon baekJoon;
+
+
+    public Member(String name, String email, BaekJoon baekJoon) {
         this.name = name;
         this.email = email;
-        this.BJName = BJName;
-        this.rating = rating;
+        this.baekJoon = baekJoon;
     }
 }
