@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>아이디</th>
+                <th>티어</th>
+                <th>점수</th>
+                <th>total</th>
+                <th>today</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="baekJoon : ${baekJoons}">
+                <td th:text="${baekJoon.id}"></td>
+                <td th:text="${baekJoon.tier}"></td>
+                <td th:text="${baekJoon.rating}"></td>
+                <td th:text="${baekJoon.totalSolvedCount}"></td>
+                <td th:text="${baekJoon.todaySolvedCount}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

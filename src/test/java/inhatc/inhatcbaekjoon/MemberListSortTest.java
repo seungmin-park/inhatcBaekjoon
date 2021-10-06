@@ -33,8 +33,6 @@ public class MemberListSortTest {
     @DisplayName("rating으로정렬")
     void rating으로정렬() throws Exception {
         //given
-        baekJoonService.clear();
-        memberService.clear();
         BaekJoon baekJoon1 = solvedApi.getUserInfo("tmddudals369");
         BaekJoon baekJoon2 = solvedApi.getUserInfo("leejuhu");
         Member member1 = new Member("박승민","201844050@itc.ac.kr", baekJoon1);

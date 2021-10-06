@@ -4,7 +4,7 @@ import inhatc.inhatcbaekjoon.api.SolvedApi;
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
 import inhatc.inhatcbaekjoon.domain.Member;
 import inhatc.inhatcbaekjoon.domain.MemberForm;
-import inhatc.inhatcbaekjoon.domain.University;
+import inhatc.inhatcbaekjoon.repository.UniversityRepository;
 import inhatc.inhatcbaekjoon.service.BaekJoonService;
 import inhatc.inhatcbaekjoon.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +29,18 @@ public class MemberController {
 
     private final MemberService memberService;
     private final BaekJoonService baekJoonService;
+    private final UniversityRepository universityRepository;
     private final SolvedApi solvedApi;
 
     @GetMapping("/members/new")
-    public String createForm(Model model){
+    public String createForm(Model model) {
         model.addAttribute("memberForm", new MemberForm());
         return "members/createMemberForm";
     }
 
     @SneakyThrows
     @PostMapping("/members/new")
-    public String create(@Valid MemberForm memberForm, BindingResult result){
+    public String create(@Valid MemberForm memberForm, BindingResult result) {
         BaekJoon baekJoon = solvedApi.getUserInfo(memberForm.getBJName());
         Member member = new Member(memberForm.getName(), memberForm.getEmail(), baekJoon);
         baekJoonService.join(baekJoon);
@@ -47,26 +48,21 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @SneakyThrows
     @GetMapping("/members")
-    public String list(Model model){
-        List<Member> members = memberService.findAll();
-        model.addAttribute("members",members);
+    public String list(Model model) throws IOException, InterruptedException {
+        List<Member> members = memberService.findAllSortByRating();
+        baekJoonService.dailySolvedCount();
+        model.addAttribute("members", members);
 
         return "members/memberList";
     }
 
 
-    @GetMapping("/rank")
-    public String rankInfo(Model model) throws IOException, InterruptedException {
-        University university = solvedApi.universityRank();
-        model.addAttribute("university", university);
-        return "rank/rankInfo";
-    }
-
     @PostConstruct
     public void createMember() throws IOException, InterruptedException {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
-        Member member = new Member("박승민","201844050@itc.ac.kr", baekJoon);
+        Member member = new Member("박승민", "201844050@itc.ac.kr", baekJoon);
         baekJoonService.join(baekJoon);
         memberService.join(member);
     }

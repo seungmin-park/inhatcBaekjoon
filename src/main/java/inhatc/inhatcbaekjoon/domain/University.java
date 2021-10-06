@@ -3,11 +3,19 @@ package inhatc.inhatcbaekjoon.domain;
 import lombok.Getter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 @Getter
 @ToString
+@Entity
 public class University {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private final String universityName = "인하공업전문대학";
     private String competitionUniversityName;       //위 등수 학교 이름 (대학 중)
     private int myUniversityRank;                   //인하공업전문대학 순위 (대학 중)

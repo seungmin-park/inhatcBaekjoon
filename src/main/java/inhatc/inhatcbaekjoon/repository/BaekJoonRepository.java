@@ -26,4 +26,8 @@ public class BaekJoonRepository {
         return em.createQuery("select b from BaekJoon b", BaekJoon.class).getResultList();
     }
 
+    public List<BaekJoon> findAllSortByTodaySolvedCount() {
+        return em.createQuery("select b from BaekJoon b order by b.todaySolvedCount desc ,b.totalSolvedCount desc ", BaekJoon.class).getResultList();
+    }
+
 }

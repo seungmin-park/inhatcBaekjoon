@@ -39,7 +39,8 @@ public class SolvedApi {
         Tier[] tiers = Tier.values();
         Tier tier = tiers[(int) paramMap.get("tier") - 1];
         int rating = (int) paramMap.get("rating");
-        return new BaekJoon(BJName,rating,tier);
+        int solvedCount = solvedCount(BJName);
+        return new BaekJoon(BJName,rating, solvedCount, solvedCount, tier);
     }
 
     /**
@@ -82,5 +83,26 @@ public class SolvedApi {
             }
         }
         return university;
+    }
+
+    /**
+     * solvedCount 가저오기
+     */
+    public int solvedCount(String BJName) throws IOException, InterruptedException {
+        int totalCount = 0;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://solved.ac/api/v3/user/problem_stats?handle="+BJName))
+                .header("Content-Type", "application/json")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        ArrayList<LinkedHashMap> arrayList = obj.readValue(response.body(), ArrayList.class);
+
+        for (LinkedHashMap map : arrayList) {
+            totalCount += (int)map.get("solved");
+        }
+
+        return totalCount;
     }
 }

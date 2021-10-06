@@ -21,7 +21,11 @@ public class MemberRepository {
         return em.find(Member.class, id);
     }
 
-    public List<Member> findAll(){
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member m", Member.class).getResultList();
+    }
+
+    public List<Member> findAllSortingByRating(){
         return em.createQuery("select m from Member m order by m.baekJoon.rating desc ",Member.class)
                 .getResultList();
     }
