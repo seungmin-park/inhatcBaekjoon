@@ -38,6 +38,7 @@ public class BaekJoonService {
         return baekJoonRepository.findAllSortByTodaySolvedCount();
     }
 
+    @Transactional
     public void dailySolvedCount() throws IOException, InterruptedException {
         LocalDateTime dateTime = localDateTime.now();
         String format = dateTime.format(DateTimeFormatter.ofPattern("HHmm"));

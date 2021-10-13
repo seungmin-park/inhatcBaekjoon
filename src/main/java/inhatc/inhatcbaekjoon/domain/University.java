@@ -27,7 +27,7 @@ public class University {
     private String globalCompetitionUniversityName;//위 등수 학교 이름 (전체 기관)
     private int myUniversityGlobalRank;             //인하공업전문대학 순위 (전체 기관)
     private int globalCompetitionUniversityRank;    //위 등수 학교 순위 (대학 중)
-    private int globalCompetitionUniversityRating;  //위 등수 학교 점수 (전체 기관)
+      private int globalCompetitionUniversityRating;  //위 등수 학교 점수 (전체 기관)
     private int globalRatingDifference;             //위 등수 학교와 인하공업전문대학 점수 차이(전체 기관)
 
 

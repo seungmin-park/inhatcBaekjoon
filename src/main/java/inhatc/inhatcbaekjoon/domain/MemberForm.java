@@ -5,8 +5,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-@Getter
 @Setter
+@Getter
 public class MemberForm {
 
     @NotEmpty(message = "회원 이름이 비어있습니다.")
@@ -18,5 +18,6 @@ public class MemberForm {
     @NotEmpty(message = "백준아이디가 비어있습니다.")
     private String BJName;
 
-    private Integer rating;
+    @NotEmpty(message = "github 아이디가 비어있습니다.")
+    private String userGithubId;
 }

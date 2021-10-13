@@ -1,11 +1,13 @@
 package inhatc.inhatcbaekjoon.controller;
 
+import inhatc.inhatcbaekjoon.api.GithubApi;
 import inhatc.inhatcbaekjoon.api.SolvedApi;
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
+import inhatc.inhatcbaekjoon.domain.GithubInfo;
 import inhatc.inhatcbaekjoon.domain.Member;
 import inhatc.inhatcbaekjoon.domain.MemberForm;
-import inhatc.inhatcbaekjoon.repository.UniversityRepository;
 import inhatc.inhatcbaekjoon.service.BaekJoonService;
+import inhatc.inhatcbaekjoon.service.GithubService;
 import inhatc.inhatcbaekjoon.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,10 +29,12 @@ import java.util.List;
 @Slf4j
 public class MemberController {
 
-    private final MemberService memberService;
-    private final BaekJoonService baekJoonService;
-    private final UniversityRepository universityRepository;
     private final SolvedApi solvedApi;
+    private final GithubApi githubApi;
+    private final MemberService memberService;
+    private final GithubService githubService;
+    private final BaekJoonService baekJoonService;
+
 
     @GetMapping("/members/new")
     public String createForm(Model model) {
@@ -42,8 +46,10 @@ public class MemberController {
     @PostMapping("/members/new")
     public String create(@Valid MemberForm memberForm, BindingResult result) {
         BaekJoon baekJoon = solvedApi.getUserInfo(memberForm.getBJName());
-        Member member = new Member(memberForm.getName(), memberForm.getEmail(), baekJoon);
+        GithubInfo githubInfo = githubApi.userGithubCommitCountInfo(memberForm.getUserGithubId());
+        Member member = new Member(memberForm.getName(), memberForm.getEmail(),githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
+        githubService.join(githubInfo);
         memberService.join(member);
         return "redirect:/";
     }
@@ -62,8 +68,10 @@ public class MemberController {
     @PostConstruct
     public void createMember() throws IOException, InterruptedException {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
-        Member member = new Member("박승민", "201844050@itc.ac.kr", baekJoon);
+        GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
+        Member member = new Member("박승민", "201844050@itc.ac.kr",githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
+        githubService.join(githubInfo);
         memberService.join(member);
     }
 }
