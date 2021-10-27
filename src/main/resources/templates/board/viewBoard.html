@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div th:object="${board}">
+        제목 : <span th:text="${board.title}"></span> <br>
+        내용 : <span th:text="${board.content}"></span> <br>
+        <div style="display: flex"><a th:href="@{'/board/modify/'+ ${board.id}}">
+            <button>수정</button>
+        </a>
+            <form th:action="@{'/board/delete/'+ ${board.id}}" th:method="post">
+                <input type="hidden" name="_method" value="delete"/>
+                <button id="delete-btn">삭제</button>
+            </form></div>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+</body>
+</html>
