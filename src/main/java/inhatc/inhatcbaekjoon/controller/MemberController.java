@@ -23,10 +23,9 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-
+@Slf4j
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class MemberController {
 
     private final SolvedApi solvedApi;
@@ -47,7 +46,7 @@ public class MemberController {
     public String create(@Valid MemberForm memberForm, BindingResult result) {
         BaekJoon baekJoon = solvedApi.getUserInfo(memberForm.getBJName());
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo(memberForm.getUserGithubId());
-        Member member = new Member(memberForm.getName(), memberForm.getEmail(),githubInfo , baekJoon);
+        Member member = new Member(memberForm.getName(), memberForm.getEmail(),memberForm.getPassword(), githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);
@@ -69,7 +68,7 @@ public class MemberController {
     public void createMember() throws IOException, InterruptedException {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
-        Member member = new Member("박승민", "201844050@itc.ac.kr",githubInfo , baekJoon);
+        Member member = new Member("박승민", "201844050@itc.ac.kr","123456",githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);

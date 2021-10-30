@@ -2,6 +2,7 @@ package inhatc.inhatcbaekjoon.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ public class Member {
 
     private String name;
     private String email;
+    private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userGithubId")
@@ -26,9 +28,10 @@ public class Member {
     @JoinColumn(name = "bjname")
     private BaekJoon baekJoon;
 
-    public Member(String name, String email, GithubInfo githubInfo, BaekJoon baekJoon) {
+    public Member(String name, String email, String password, GithubInfo githubInfo, BaekJoon baekJoon) {
         this.name = name;
         this.email = email;
+        this.password = new BCryptPasswordEncoder().encode(password);
         this.githubInfo = githubInfo;
         this.baekJoon = baekJoon;
     }

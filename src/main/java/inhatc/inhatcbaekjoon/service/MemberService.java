@@ -32,4 +32,8 @@ public class MemberService {
         return memberRepository.findAllSortingByRating();
     }
 
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
 }
