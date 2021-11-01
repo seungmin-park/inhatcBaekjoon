@@ -9,6 +9,7 @@ import inhatc.inhatcbaekjoon.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ public class MemberController {
     private final MemberService memberService;
     private final GithubService githubService;
     private final BaekJoonService baekJoonService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @GetMapping("/members/new")
@@ -45,12 +46,13 @@ public class MemberController {
     public String create(@Valid MemberForm memberForm, BindingResult result) {
         BaekJoon baekJoon = solvedApi.getUserInfo(memberForm.getBJName());
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo(memberForm.getUserGithubId());
-        memberForm.setPassword(bCryptPasswordEncoder.encode(memberForm.getPassword()));
-        Member member = new Member(memberForm.getName(), memberForm.getEmail(),memberForm.getPassword(), "MEMBER", githubInfo , baekJoon);
+        String rawPassword = memberForm.getPassword();
+        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        Member member = new Member(memberForm.getName(), memberForm.getEmail(),encPassword, "ROLE_USER", githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @SneakyThrows
@@ -68,7 +70,7 @@ public class MemberController {
     public void createMember() throws IOException, InterruptedException {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
-        Member member = new Member("박승민", "201844050@itc.ac.kr",bCryptPasswordEncoder.encode("123456"), "ADMIN", githubInfo , baekJoon);
+        Member member = new Member("박승민", "201844050@itc.ac.kr",bCryptPasswordEncoder.encode("123456"), "ROLE_ADMIN", githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);
