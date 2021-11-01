@@ -18,6 +18,11 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  security:
+    user:
+      name: 201844050@itc.ac.kr
+      password: 123456
+
 
 logging:
   level:

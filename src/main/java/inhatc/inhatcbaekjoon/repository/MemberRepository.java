@@ -2,6 +2,7 @@ package inhatc.inhatcbaekjoon.repository;
 
 import inhatc.inhatcbaekjoon.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -31,7 +32,7 @@ public class MemberRepository {
     }
 
     public Member findByEmail(String email){
-        return em.find(Member.class, email);
+        return em.createQuery("select m from Member m where m.email =: email",Member.class).setParameter("email",email).getSingleResult();
     }
 
 }

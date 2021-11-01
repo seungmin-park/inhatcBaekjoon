@@ -23,4 +23,6 @@ public class MemberForm {
 
 //    @NotEmpty(message = "github 아이디가 비어있습니다.")
     private String userGithubId;
+
+    private String auth;
 }

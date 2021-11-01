@@ -2,16 +2,14 @@ package inhatc.inhatcbaekjoon.controller;
 
 import inhatc.inhatcbaekjoon.api.GithubApi;
 import inhatc.inhatcbaekjoon.api.SolvedApi;
-import inhatc.inhatcbaekjoon.domain.BaekJoon;
-import inhatc.inhatcbaekjoon.domain.GithubInfo;
-import inhatc.inhatcbaekjoon.domain.Member;
-import inhatc.inhatcbaekjoon.domain.MemberForm;
+import inhatc.inhatcbaekjoon.domain.*;
 import inhatc.inhatcbaekjoon.service.BaekJoonService;
 import inhatc.inhatcbaekjoon.service.GithubService;
 import inhatc.inhatcbaekjoon.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +31,7 @@ public class MemberController {
     private final MemberService memberService;
     private final GithubService githubService;
     private final BaekJoonService baekJoonService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 
     @GetMapping("/members/new")
@@ -46,7 +45,8 @@ public class MemberController {
     public String create(@Valid MemberForm memberForm, BindingResult result) {
         BaekJoon baekJoon = solvedApi.getUserInfo(memberForm.getBJName());
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo(memberForm.getUserGithubId());
-        Member member = new Member(memberForm.getName(), memberForm.getEmail(),memberForm.getPassword(), githubInfo , baekJoon);
+        memberForm.setPassword(bCryptPasswordEncoder.encode(memberForm.getPassword()));
+        Member member = new Member(memberForm.getName(), memberForm.getEmail(),memberForm.getPassword(), "MEMBER", githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);
@@ -68,7 +68,7 @@ public class MemberController {
     public void createMember() throws IOException, InterruptedException {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
-        Member member = new Member("박승민", "201844050@itc.ac.kr","123456",githubInfo , baekJoon);
+        Member member = new Member("박승민", "201844050@itc.ac.kr",bCryptPasswordEncoder.encode("123456"), "ADMIN", githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);
