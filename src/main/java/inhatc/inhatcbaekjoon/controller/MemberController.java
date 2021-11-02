@@ -2,6 +2,7 @@ package inhatc.inhatcbaekjoon.controller;
 
 import inhatc.inhatcbaekjoon.api.GithubApi;
 import inhatc.inhatcbaekjoon.api.SolvedApi;
+import inhatc.inhatcbaekjoon.config.auth.PrincipalDetails;
 import inhatc.inhatcbaekjoon.domain.*;
 import inhatc.inhatcbaekjoon.service.BaekJoonService;
 import inhatc.inhatcbaekjoon.service.GithubService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,9 +59,13 @@ public class MemberController {
 
     @SneakyThrows
     @GetMapping("/members")
-    public String list(Model model) throws IOException, InterruptedException {
+    public String list(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            Model model
+    ) throws IOException, InterruptedException {
         List<Member> members = memberService.findAllSortByRating();
         baekJoonService.dailySolvedCount();
+        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("members", members);
 
         return "members/memberList";
@@ -71,6 +77,13 @@ public class MemberController {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
         Member member = new Member("박승민", "201844050@itc.ac.kr",bCryptPasswordEncoder.encode("123456"), "ROLE_ADMIN", githubInfo , baekJoon);
+        baekJoonService.join(baekJoon);
+        githubService.join(githubInfo);
+        memberService.join(member);
+
+        baekJoon = solvedApi.getUserInfo("leejuhu");
+        githubInfo = githubApi.userGithubCommitCountInfo("chanwon-seo");
+        member = new Member("서찬원", "test@test",bCryptPasswordEncoder.encode("1"), "ROLE_USER", githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);

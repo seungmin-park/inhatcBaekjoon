@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container" th:object="${username}">
+    <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
+    <div th:if="${userRole.equals('ROLE_ADMIN')}">
+        <button type="submit" class="btn btn-primary">수정</button>
+    </div>
+    <div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="title" placeholder="글 제목">
+            <select name="category" id="">
+                <option value="javaCode" selected>Java</option>
+                <option value="STUDY">스터디</option>
+                <option value="TEAM_PROJECT">팀 프로젝트</option>
+                <option value="HACKATHON">해커톤</option>
+                <option value="TEST">공모전</option>
+            </select>
+        </div>
+        <table class="table table-striped">
+            <tbody th:each="structure : ${structureList}">
+            <td>알고리즘 종류</td>
+            <td th:text="${structure.name}"></td>
+            <td>알고리즘 설명</td>
+            <td th:text="${structure.detail}"></td>
+            <td>알고리즘 구현코드</td>
+            <td th:text="${structure.javaCode}"></td>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

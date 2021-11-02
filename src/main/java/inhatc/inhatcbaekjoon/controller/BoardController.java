@@ -1,10 +1,12 @@
 package inhatc.inhatcbaekjoon.controller;
 
+import inhatc.inhatcbaekjoon.config.auth.PrincipalDetails;
 import inhatc.inhatcbaekjoon.domain.BoardEntity;
 import inhatc.inhatcbaekjoon.domain.BoardForm;
 import inhatc.inhatcbaekjoon.domain.Category;
 import inhatc.inhatcbaekjoon.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,14 +22,19 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board")
-    public String BoardList(@RequestParam(defaultValue = "ALL") String category, Model model) {
+    public String BoardList(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestParam(defaultValue = "ALL") String category,
+            Model model) {
         List<BoardEntity> boards = boardService.findByValue(category);
+        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("boards", boards);
         return "/board/boardMain";
     }
 
     @GetMapping("/board/writing")
-    public String createBoard(Model model) {
+    public String createBoard(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("BoardFrom", new BoardForm());
         return "board/boardWriting";
     }
@@ -40,15 +47,23 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String viewBoard(@PathVariable Long id, Model model) {
+    public String viewBoard(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable Long id, Model model
+    ) {
         BoardEntity board = boardService.findById(id);
+        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("board", board);
         return "/board/viewBoard";
     }
 
     @GetMapping("/board/modify/{id}")
-    public String modifyBoard(@PathVariable Long id, Model model) {
+    public String modifyBoard(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable Long id, Model model
+    ) {
         BoardEntity board = boardService.findById(id);
+        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("board", board);
         return "/board/modifyBoard";
     }

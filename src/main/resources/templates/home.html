@@ -5,25 +5,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+<div class="container" th:object="${username}">
+    <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
     <div class="jumbotron">
         <h1>inhatc-baekJoon</h1>
         <p class="lead">회원 기능</p>
         <p>
-            <a class="btn btn-lg btn-secondary" href="/login">로그인</a>
-        </p>
-        <p>
-            <a class="btn btn-lg btn-secondary" href="/members/new">회원 가입</a>
             <a class="btn btn-lg btn-secondary" href="/members">회원 목록</a>
-        </p>
-        <p>
             <a class="btn btn-lg btn-secondary" href="/rank">학교 랭킹</a>
             <a class="btn btn-lg btn-secondary" href="/rank/daily">Daily 랭킹</a>
         </p>
         <p>
             <a class="btn btn-lg btn-secondary" href="/rank/commit">github</a>
             <a class="btn btn-lg btn-secondary" href="/board">커뮤니티</a>
+            <a class="btn btn-lg btn-secondary" href="/dataStructure/view">자료구조/알고리즘</a>
         </p>
     </div>
     <div th:replace="fragments/footer :: footer" />

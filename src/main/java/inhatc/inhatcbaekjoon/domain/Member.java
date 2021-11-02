@@ -15,7 +15,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    private String username;
+    private String name;
     private String email;
     private String password;
 
@@ -31,7 +31,7 @@ public class Member {
     private BaekJoon baekJoon;
 
     public Member(String name, String email, String password, String role, GithubInfo githubInfo, BaekJoon baekJoon) {
-        this.username = name;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;

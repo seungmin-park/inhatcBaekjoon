@@ -39,7 +39,11 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUsername();
+        return member.getName();
+    }
+
+    public String getUserRole() {
+        return member.getRole();
     }
 
     @Override

@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div class="header" th:fragment="bodyHeader">
-  <ul class="nav nav-pills pull-right">
-    <li><a href="/">Home</a></li>
-  </ul>
-</div>
+<div class="header" th:fragment="bodyHeader(username)">
+  <div class="container" style=" display : flex; justify-content: space-between">
+    <span><a href="/">Home</a></span>
+    <span>
+    <span th:text="${username}">이름</span>
+    <span><button type="submit" class="btn btn-primary" onclick="location.href='/logout'">로그아웃</button></span>
+    </span>
+  </div>
+  </div>
+</html>
