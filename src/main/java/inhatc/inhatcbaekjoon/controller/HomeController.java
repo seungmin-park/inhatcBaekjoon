@@ -14,6 +14,9 @@ public class HomeController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
         String username = principalDetails.getUsername();
+        if (username == null){
+            username = "";
+        }
         model.addAttribute("username", username);
         return "home";
     }

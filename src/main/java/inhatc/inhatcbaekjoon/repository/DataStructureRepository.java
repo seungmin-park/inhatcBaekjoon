@@ -21,6 +21,16 @@ public class DataStructureRepository {
         return dataStructure.getName();
     }
 
+    public DataStructure findById(Long id) {
+        return em.find(DataStructure.class, id);
+    }
+
+    public DataStructure findByName(String name) {
+        return em.createQuery("select d from DataStructure d where d.name =: name", DataStructure.class)
+                .setParameter("name",name)
+                .getSingleResult();
+    }
+
     public List<DataStructure> findByAll() {
         return em.createQuery("select d from DataStructure d", DataStructure.class).getResultList();
     }
