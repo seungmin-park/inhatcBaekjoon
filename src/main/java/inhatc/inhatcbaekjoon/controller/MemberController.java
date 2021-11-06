@@ -76,14 +76,7 @@ public class MemberController {
     public void createMember() throws IOException, InterruptedException {
         BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
         GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
-        Member member = new Member("박승민", "201844050@itc.ac.kr",bCryptPasswordEncoder.encode("123456"), "ROLE_ADMIN", githubInfo , baekJoon);
-        baekJoonService.join(baekJoon);
-        githubService.join(githubInfo);
-        memberService.join(member);
-
-        baekJoon = solvedApi.getUserInfo("leejuhu");
-        githubInfo = githubApi.userGithubCommitCountInfo("chanwon-seo");
-        member = new Member("서찬원", "test@test",bCryptPasswordEncoder.encode("1"), "ROLE_USER", githubInfo , baekJoon);
+        Member member = new Member("관리자", "admin@admin",bCryptPasswordEncoder.encode("123456"), "ROLE_ADMIN", githubInfo , baekJoon);
         baekJoonService.join(baekJoon);
         githubService.join(githubInfo);
         memberService.join(member);
