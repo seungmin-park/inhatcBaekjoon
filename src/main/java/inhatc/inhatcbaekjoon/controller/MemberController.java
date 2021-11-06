@@ -70,15 +70,4 @@ public class MemberController {
 
         return "members/memberList";
     }
-
-
-    @PostConstruct
-    public void createMember() throws IOException, InterruptedException {
-        BaekJoon baekJoon = solvedApi.getUserInfo("tmddudals369");
-        GithubInfo githubInfo = githubApi.userGithubCommitCountInfo("seungmin-park");
-        Member member = new Member("관리자", "admin@admin",bCryptPasswordEncoder.encode("123456"), "ROLE_ADMIN", githubInfo , baekJoon);
-        baekJoonService.join(baekJoon);
-        githubService.join(githubInfo);
-        memberService.join(member);
-    }
 }
