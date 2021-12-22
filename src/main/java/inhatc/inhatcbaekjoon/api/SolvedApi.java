@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
 import inhatc.inhatcbaekjoon.domain.Tier;
 import inhatc.inhatcbaekjoon.domain.University;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+@Slf4j
 @Service
 public class SolvedApi {
     public SolvedApi() {
@@ -28,19 +32,24 @@ public class SolvedApi {
     public BaekJoon getUserInfo(String BJName) throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(userInfoUrl+BJName))
+                .uri(URI.create(userInfoUrl + BJName))
                 .header("Content-Type", "application/json")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-        HashMap<String, Object> paramMap = obj.readValue(response.body(), HashMap.class);
+        try {
+            HashMap<String, Object> paramMap = obj.readValue(response.body(), HashMap.class);
+            Tier[] tiers = Tier.values();
+            Tier tier = tiers[(int) paramMap.get("tier") - 1];
+            int rating = (int) paramMap.get("rating");
+            int solvedCount = solvedCount(BJName);
+            return new BaekJoon(BJName, rating, solvedCount, solvedCount, tier);
 
-        Tier[] tiers = Tier.values();
-        Tier tier = tiers[(int) paramMap.get("tier") - 1];
-        int rating = (int) paramMap.get("rating");
-        int solvedCount = solvedCount(BJName);
-        return new BaekJoon(BJName,rating, solvedCount, solvedCount, tier);
+        } catch (Exception e) {
+            log.info("{}",e.getMessage());
+        }
+        return null;
     }
 
     /**

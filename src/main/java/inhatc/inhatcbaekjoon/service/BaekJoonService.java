@@ -4,6 +4,7 @@ import inhatc.inhatcbaekjoon.api.SolvedApi;
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
 import inhatc.inhatcbaekjoon.repository.BaekJoonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,18 +41,19 @@ public class BaekJoonService {
 
     @Transactional
     public void dailySolvedCount() throws IOException, InterruptedException {
-        LocalDateTime dateTime = localDateTime.now();
-        String format = dateTime.format(DateTimeFormatter.ofPattern("HHmm"));
         List<BaekJoon> baekJoons = findAll();
         for (BaekJoon baekJoon : baekJoons) {
-            if (format.equals("0000")) {
-                baekJoon.setSavingSolvedCount(baekJoon.getTotalSolvedCount());
-                baekJoon.setTodaySolvedCount(0);
-            }
-            else{
-                baekJoon.setTotalSolvedCount(solvedApi.solvedCount(baekJoon.getId()));
-                baekJoon.setTodaySolvedCount(baekJoon.getTotalSolvedCount() - baekJoon.getSavingSolvedCount());
-            }
+            baekJoon.setTotalSolvedCount(solvedApi.solvedCount(baekJoon.getId()));
+            baekJoon.setTodaySolvedCount(baekJoon.getTotalSolvedCount() - baekJoon.getSavingSolvedCount());
+        }
+    }
+
+    @Scheduled(cron = "0 0 00 * * ?")
+    @Transactional
+    public void initDailyCount(){
+        List<BaekJoon> baekJoons = findAll();
+        for (BaekJoon baekJoon : baekJoons) {
+            baekJoon.setTodaySolvedCount(0);
         }
     }
 

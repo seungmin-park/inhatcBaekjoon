@@ -36,7 +36,7 @@ public class BoardController {
     public String createBoard(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("BoardFrom", new BoardForm());
-        return "board/boardWriting";
+        return "/board/boardWriting";
     }
 
     @PostMapping("/board/writing")

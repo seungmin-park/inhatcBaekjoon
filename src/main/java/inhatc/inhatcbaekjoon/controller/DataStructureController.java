@@ -39,7 +39,7 @@ public class DataStructureController {
         DataStructure structure = dataStructureRepository.findByName(name);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("structure", structure);
-        return "dataStructure/modifyDataStructure";
+        return "/dataStructure/modifyDataStructure";
     }
 
     @PutMapping("/view/modify/dataStructure/{name}")
