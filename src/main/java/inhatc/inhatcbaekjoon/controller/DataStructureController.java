@@ -2,7 +2,7 @@ package inhatc.inhatcbaekjoon.controller;
 
 import inhatc.inhatcbaekjoon.config.auth.PrincipalDetails;
 import inhatc.inhatcbaekjoon.domain.DataStructure;
-import inhatc.inhatcbaekjoon.repository.DataStructureRepository;
+import inhatc.inhatcbaekjoon.service.DataStructureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,14 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DataStructureController {
 
-    private final DataStructureRepository dataStructureRepository;
+    private final DataStructureService dataStructureService;
 
     @GetMapping("/view/dataStructure")
     public String viewDataStructure(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             Model model
     ) {
-        List<DataStructure> structureList = dataStructureRepository.findByAll();
+        List<DataStructure> structureList = dataStructureService.findByAll();
         model.addAttribute("userRole", principalDetails.getUserRole());
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("structureList", structureList);
@@ -36,7 +36,7 @@ public class DataStructureController {
             @PathVariable String name,
             Model model
     ) {
-        DataStructure structure = dataStructureRepository.findByName(name);
+        DataStructure structure = dataStructureService.findByName(name);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("structure", structure);
         return "/dataStructure/modifyDataStructure";
@@ -51,10 +51,10 @@ public class DataStructureController {
             @RequestParam String javaCode,
             Model model
     ) {
-        DataStructure structure = dataStructureRepository.findByName(name);
+        DataStructure structure = dataStructureService.findByName(name);
         structure.modifyDataStructure(title,detail ,javaCode);
         model.addAttribute("username", principalDetails.getUsername());
-        dataStructureRepository.save(structure);
+        dataStructureService.join(structure);
         return "redirect:/view/dataStructure";
     }
 
@@ -125,6 +125,6 @@ public class DataStructureController {
                 "    }\n" +
                 "    \n" +
                 "}\n");
-        dataStructureRepository.save(dataStructure);
+        dataStructureService.join(dataStructure);
     }
 }

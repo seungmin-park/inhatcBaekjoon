@@ -6,16 +6,15 @@ import inhatc.inhatcbaekjoon.config.auth.PrincipalDetails;
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
 import inhatc.inhatcbaekjoon.domain.GithubInfo;
 import inhatc.inhatcbaekjoon.domain.University;
-import inhatc.inhatcbaekjoon.repository.UniversityRepository;
 import inhatc.inhatcbaekjoon.service.BaekJoonService;
 import inhatc.inhatcbaekjoon.service.GithubService;
+import inhatc.inhatcbaekjoon.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +27,7 @@ public class RankingController {
     private final GithubApi githubApi;
     private final GithubService githubService;
     private final BaekJoonService baekJoonService;
-    private final UniversityRepository universityRepository;
+    private final UniversityService universityService;
 
     @GetMapping("/rank")
     public String rankInfo(
@@ -36,7 +35,7 @@ public class RankingController {
             Model model
     ) throws IOException, InterruptedException {
         University university = solvedApi.universityRank();
-        universityRepository.save(university);
+        universityService.join(university);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("university", university);
         return "rank/universityrankInfo";
