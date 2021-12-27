@@ -85,7 +85,7 @@ public class GithubApi {
                         request = HttpRequest.newBuilder()
                                 .uri(URI.create(stringBuilder.toString() + pageNum))
                                 .header("Content-Type", "application/json")
-                                .header("Authorization", "token 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")
+                                .header("Authorization", "token {gitToken}")
                                 .method("GET", HttpRequest.BodyPublishers.noBody())
                                 .build();
                         response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());

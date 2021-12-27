@@ -83,7 +83,7 @@ public class MemberController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             Model model
     ) throws IOException, InterruptedException {
-        List<Member> members = memberService.findAllSortByRating();
+        List<Member> members = memberService.findAllByRatingDesc();
         baekJoonService.dailySolvedCount();
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("members", members);
