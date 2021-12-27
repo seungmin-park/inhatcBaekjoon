@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,11 +17,11 @@ public class GithubService {
     private final GithubRepository githubRepository;
 
     @Transactional
-    public String join(GithubInfo githubInfo) {
+    public GithubInfo join(GithubInfo githubInfo) {
         return githubRepository.save(githubInfo);
     }
 
-    public GithubInfo findById(String id) {
+    public Optional<GithubInfo> findById(String id) {
         return githubRepository.findById(id);
     }
 
@@ -28,7 +29,7 @@ public class GithubService {
         return githubRepository.findAll();
     }
 
-    public List<GithubInfo> findAllSortingByCommitCount() {
-        return githubRepository.findAllSortingByCommitCount();
+    public List<GithubInfo> findAllByOrderByCommitCountDesc() {
+        return githubRepository.findAllByOrderByCommitCountDesc();
     }
 }

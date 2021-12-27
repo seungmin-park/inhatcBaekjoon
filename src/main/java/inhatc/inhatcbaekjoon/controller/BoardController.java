@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -51,9 +52,9 @@ public class BoardController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id, Model model
     ) {
-        BoardEntity board = boardService.findById(id);
+        Optional<BoardEntity> board = boardService.findById(id);
         model.addAttribute("username", principalDetails.getUsername());
-        model.addAttribute("board", board);
+        model.addAttribute("board", board.get());
         return "/board/viewBoard";
     }
 
@@ -62,9 +63,9 @@ public class BoardController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id, Model model
     ) {
-        BoardEntity board = boardService.findById(id);
+        Optional<BoardEntity> board = boardService.findById(id);
         model.addAttribute("username", principalDetails.getUsername());
-        model.addAttribute("board", board);
+        model.addAttribute("board", board.get());
         return "/board/modifyBoard";
     }
 
@@ -74,7 +75,8 @@ public class BoardController {
                               @RequestParam String content,
                               @RequestParam Category category)
     {
-        BoardEntity board = boardService.findById(id);
+        Optional<BoardEntity> boardEntity = boardService.findById(id);
+        BoardEntity board = boardEntity.get();
         board.modifyBoardEntity(title,content,category);
         boardService.join(board);
         return "redirect:/board";

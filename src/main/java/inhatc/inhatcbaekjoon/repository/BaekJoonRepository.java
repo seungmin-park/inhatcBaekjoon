@@ -1,18 +1,11 @@
 package inhatc.inhatcbaekjoon.repository;
 
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-@Repository
-public interface BaekJoonRepository {
+public interface BaekJoonRepository extends JpaRepository<BaekJoon,String> {
 
-    String save(BaekJoon baekJoon);
-
-    BaekJoon findById(String id);
-
-    List<BaekJoon> findAll();
-
-    List<BaekJoon> findAllSortByTodaySolvedCount();
+    List<BaekJoon> findAllByOrderByTodaySolvedCountDesc();
 }

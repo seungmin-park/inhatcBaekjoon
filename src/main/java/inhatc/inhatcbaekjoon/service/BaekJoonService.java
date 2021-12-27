@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,14 +21,13 @@ public class BaekJoonService {
 
     private final BaekJoonRepository baekJoonRepository;
     private final SolvedApi solvedApi;
-    private LocalDateTime localDateTime;
 
     @Transactional
-    public String join(BaekJoon baekJoon){
+    public BaekJoon join(BaekJoon baekJoon){
         return baekJoonRepository.save(baekJoon);
     }
 
-    public BaekJoon findById(String id){
+    public Optional<BaekJoon> findById(String id){
         return baekJoonRepository.findById(id);
     }
 
@@ -35,8 +35,8 @@ public class BaekJoonService {
         return baekJoonRepository.findAll();
     }
 
-    public List<BaekJoon> findAllSortByTodaySolvedCount(){
-        return baekJoonRepository.findAllSortByTodaySolvedCount();
+    public List<BaekJoon> findAllByOrderByTodaySolvedCountDesc(){
+        return baekJoonRepository.findAllByOrderByTodaySolvedCountDesc();
     }
 
     @Transactional

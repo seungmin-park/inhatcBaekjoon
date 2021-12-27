@@ -48,7 +48,7 @@ public class RankingController {
             Model model
     ) {
         baekJoonService.dailySolvedCount();
-        List<BaekJoon> baekJoons = baekJoonService.findAllSortByTodaySolvedCount();
+        List<BaekJoon> baekJoons = baekJoonService.findAllByOrderByTodaySolvedCountDesc();
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("baekJoons", baekJoons);
         return "rank/dailyrank";
@@ -59,7 +59,7 @@ public class RankingController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             Model model
     ){
-        List<GithubInfo> usersGithubInfo = githubService.findAllSortingByCommitCount();
+        List<GithubInfo> usersGithubInfo = githubService.findAllByOrderByCommitCountDesc();
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("usersGithubInfo", usersGithubInfo);
         return "rank/githubCommitRank";
