@@ -3,13 +3,10 @@ package inhatc.inhatcbaekjoon.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inhatc.inhatcbaekjoon.domain.GithubInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

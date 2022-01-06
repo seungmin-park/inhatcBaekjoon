@@ -5,19 +5,19 @@
 <div class="container" th:object="${username}">
     <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
     <div>
-        <img th:src="|https://ghchart.rshah.org/219138/${usersGithubInfo[0].userGithubId}|" alt="">
+        <img th:src="|https://ghchart.rshah.org/219138/${members[0].githubInfo.userGithubId}|" alt="">
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>GithubId</th>
+                <th>이름</th>
                 <th>commit 수</th>
 
             </tr>
             </thead>
             <tbody>
-            <tr th:each="userGithubInfo : ${usersGithubInfo}">
-                <td th:text="${userGithubInfo.userGithubId}"></td>
-                <td th:text="${userGithubInfo.commitCount}"></td>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.name}"></td>
+                <td th:text="${member.githubInfo.commitCount}"></td>
 
             </tr>
             </tbody>

@@ -36,4 +36,11 @@ public class MemberService {
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
+
+    public List<Member> findAllByOrderByTodaySolvedCountDesc() {
+        return memberRepository.findAllByOrderByTodaySolvedCountDesc();}
+
+    public List<Member> findAllByOrderByCommitCountDesc() {
+        return memberRepository.findAllByOrderByCommitCountDesc();
+    }
 }

@@ -8,20 +8,20 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>아이디</th>
+                <th>이름</th>
                 <th>티어</th>
                 <th>점수</th>
-                <th>total</th>
-                <th>today</th>
+                <th>해결한 문제</th>
+                <th>오늘 해결한 문제</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="baekJoon : ${baekJoons}">
-                <td th:text="${baekJoon.id}"></td>
-                <td th:text="${baekJoon.tier}"></td>
-                <td th:text="${baekJoon.rating}"></td>
-                <td th:text="${baekJoon.totalSolvedCount}"></td>
-                <td th:text="${baekJoon.todaySolvedCount}"></td>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.name}"></td>
+                <td th:text="${member.baekJoon.tier}"></td>
+                <td th:text="${member.baekJoon.rating}"></td>
+                <td th:text="${member.baekJoon.totalSolvedCount}"></td>
+                <td th:text="${member.baekJoon.todaySolvedCount}"></td>
             </tr>
             </tbody>
         </table>

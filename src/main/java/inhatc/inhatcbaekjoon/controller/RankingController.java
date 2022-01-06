@@ -5,9 +5,11 @@ import inhatc.inhatcbaekjoon.api.SolvedApi;
 import inhatc.inhatcbaekjoon.config.auth.PrincipalDetails;
 import inhatc.inhatcbaekjoon.domain.BaekJoon;
 import inhatc.inhatcbaekjoon.domain.GithubInfo;
+import inhatc.inhatcbaekjoon.domain.Member;
 import inhatc.inhatcbaekjoon.domain.University;
 import inhatc.inhatcbaekjoon.service.BaekJoonService;
 import inhatc.inhatcbaekjoon.service.GithubService;
+import inhatc.inhatcbaekjoon.service.MemberService;
 import inhatc.inhatcbaekjoon.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -24,8 +26,8 @@ import java.util.List;
 public class RankingController {
 
     private final SolvedApi solvedApi;
-    private final GithubApi githubApi;
     private final GithubService githubService;
+    private final MemberService memberService;
     private final BaekJoonService baekJoonService;
     private final UniversityService universityService;
 
@@ -48,9 +50,9 @@ public class RankingController {
             Model model
     ) {
         baekJoonService.dailySolvedCount();
-        List<BaekJoon> baekJoons = baekJoonService.findAllByOrderByTodaySolvedCountDesc();
+        List<Member> members = memberService.findAllByOrderByTodaySolvedCountDesc();
         model.addAttribute("username", principalDetails.getUsername());
-        model.addAttribute("baekJoons", baekJoons);
+        model.addAttribute("members", members);
         return "rank/dailyrank";
     }
 
@@ -59,9 +61,9 @@ public class RankingController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             Model model
     ){
-        List<GithubInfo> usersGithubInfo = githubService.findAllByOrderByCommitCountDesc();
+        List<Member> members = memberService.findAllByOrderByCommitCountDesc();
         model.addAttribute("username", principalDetails.getUsername());
-        model.addAttribute("usersGithubInfo", usersGithubInfo);
+        model.addAttribute("members", members);
         return "rank/githubCommitRank";
     }
 }
