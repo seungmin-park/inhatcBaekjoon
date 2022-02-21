@@ -4,6 +4,7 @@ import inhatc.inhatcbaekjoon.config.auth.PrincipalDetails;
 import inhatc.inhatcbaekjoon.domain.BoardEntity;
 import inhatc.inhatcbaekjoon.domain.BoardForm;
 import inhatc.inhatcbaekjoon.domain.Category;
+import inhatc.inhatcbaekjoon.repository.BoardSearch;
 import inhatc.inhatcbaekjoon.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +25,10 @@ public class BoardController {
 
     @GetMapping("/board")
     public String BoardList(
+            @ModelAttribute("boardSearch") BoardSearch boardSearch,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestParam(defaultValue = "ALL") String category,
             Model model) {
-        List<BoardEntity> boards = boardService.findByValue(category);
+        List<BoardEntity> boards = boardService.findByValue(boardSearch);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("boards", boards);
         return "/board/boardMain";

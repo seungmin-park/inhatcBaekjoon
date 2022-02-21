@@ -63,6 +63,14 @@
     <li> 관리자 유저만 변경 가능(일반 유저는 변경 불가)</li>
 </ul>
 
+### 2022-02-21
+
++ Querydsl 추가 -> 커뮤니티 검색 부분 동적 쿼리 Querydsl로 변경
+
+(다음에 해볼 것)
++ Spring batch 사용해보기
++ 현재 사용중인 Github API -> Github API For Java 라이브러리 변경 가능한지 확인 및 수정
+
 ## 구현 이미지
 
 ![1](https://user-images.githubusercontent.com/78605779/140614459-89a43211-23a1-49f7-a013-a74dc06d4c2d.PNG)

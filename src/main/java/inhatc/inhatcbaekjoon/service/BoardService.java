@@ -3,6 +3,7 @@ package inhatc.inhatcbaekjoon.service;
 import inhatc.inhatcbaekjoon.domain.BoardEntity;
 import inhatc.inhatcbaekjoon.domain.Category;
 import inhatc.inhatcbaekjoon.repository.BoardRepository;
+import inhatc.inhatcbaekjoon.repository.BoardSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +31,8 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public List<BoardEntity> findByValue(String category) {
-        if (category.equals("ALL")){
-            return boardRepository.findAll();
-        }else{
-            return boardRepository.findAllByCategory(Category.valueOf(category));
-        }
+    public List<BoardEntity> findByValue(BoardSearch boardSearch) {
+        return boardRepository.findBoards(boardSearch);
     }
 
     @Transactional

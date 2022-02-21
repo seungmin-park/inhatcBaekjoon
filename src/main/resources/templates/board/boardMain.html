@@ -5,16 +5,25 @@
 <div class="container" th:object="${username}">
     <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
     <div>
-        <div style="display: flex; justify-content: space-between">
-            <a href="/board/writing">글쓰기</a>
-            <select name="category" id="category">
-                <option value="" selected>--선택--</option>
-                <option value="ALL">전체</option>
-                <option value="STUDY">스터디</option>
-                <option value="TEAM_PROJECT">팀 프로젝트</option>
-                <option value="HACKATHON">해커톤</option>
-                <option value="CONTEST">공모전</option>
-            </select>
+        <div>
+            <form th:object="${boardSearch}" class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{title}" class="form-control"
+                           placeholder="제목"/>
+                </div>
+                <div class="form-group mx-sm-1 mb-2">
+                    <select th:field="*{category}" class="form-control">
+                        <option value="">게시물종류</option>
+                        <option th:each=
+                                        "status : ${T(inhatc.inhatcbaekjoon.domain.Category).values()}"
+                                th:value="${status}"
+                                th:text="${status}">option
+                        </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">검색</button>
+                <a href="/board/writing">글쓰기</a>
+            </form>
         </div>
         <table class="table table-striped">
             <thead>
@@ -38,12 +47,4 @@
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
-<script th:inline="javascript">
-    const category = document.getElementById("category");
-    console.log(category.options[category.selectedIndex].value);
-    category.addEventListener('change',(event) =>{
-        var value = category.options[category.selectedIndex].value;
-        location.href = "/board?category=" + value;
-    })
-</script>
 </html>
