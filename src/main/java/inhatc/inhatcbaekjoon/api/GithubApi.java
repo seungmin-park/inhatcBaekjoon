@@ -1,113 +1,58 @@
 package inhatc.inhatcbaekjoon.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import inhatc.inhatcbaekjoon.domain.GithubInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.PagedIterable;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
 public class GithubApi {
-    private String userReposUrl = "https://api.github.com/users/"; // /userId/repos
-    private String testUserCommitUrl = "https://api.github.com/repos/"; // /userId/repoName/contributor
-    private String userCommitUrl = "https://api.github.com/repos/"; // /userid/reposName
-
-    private ObjectMapper obj = new ObjectMapper();
-
 
     /**
-     * 전체 커밋 수 구하기
+     * 회원가입시 입력되는 유저의 github 아이디를 통해 유저 개인 repo commit 합 구하기
      */
-    public GithubInfo userGithubCommitCountInfo(String userGithubId) throws IOException, InterruptedException {
+    public GithubInfo createGithubInfo(String userGitName) throws IOException, InterruptedException {
         long beforeTime = System.currentTimeMillis();
+        int commitCount = getCommitCount(userGitName);
+        long afterTime = System.currentTimeMillis();
+        log.info("commit 수 {}",commitCount);
+        log.info("commit 수 불러오는데 걸리는 시간 {}.{}초",(afterTime - beforeTime)/1000,(afterTime - beforeTime)%1000);
 
-        int sum = 0;
+        return new GithubInfo(userGitName,commitCount);
+    }
 
-        StringBuilder stringBuilder = new StringBuilder();
+    /**
+     * commit count 구하기
+     * @param userGitName
+     * @return
+     * @throws IOException
+     */
+    public int getCommitCount(String userGitName) throws IOException{
+        GitHub gitHub = GitHub.connect();
+        int commitCount = 0;
 
-        stringBuilder.append(userReposUrl);
-        stringBuilder.append(userGithubId);
-        stringBuilder.append("/repos");
+        GHUser user = gitHub.getUser(userGitName);
+        Map<String, GHRepository> repositories = user.getRepositories();
 
-        //api 통신 - user 의 public Repository 가져오기
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(stringBuilder.toString()))
-                .header("Content-Type", "application/json")
-                .header("Authorization","token {gitToken}")
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        for (GHRepository repository : repositories.values()) {
 
-        try {
-            ArrayList repos = obj.readValue(response.body(), ArrayList.class);
-            for (Object repo : repos) {
-                LinkedHashMap hashMap = (LinkedHashMap) repo;
-
-                stringBuilder.setLength(0);
-
-                stringBuilder.append(testUserCommitUrl);
-                stringBuilder.append(userGithubId);
-                stringBuilder.append("/");
-                stringBuilder.append(hashMap.get("name"));
-                stringBuilder.append("/contributors");
-
-                //api 통신 - user 의 Repository 의 commit 가져오기
-                request = HttpRequest.newBuilder()
-                        .uri(URI.create(stringBuilder.toString()))
-                        .header("Content-Type", "application/json")
-                        .header("Authorization","token {gitToken}")
-                        .method("GET", HttpRequest.BodyPublishers.noBody())
-                        .build();
-                response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-                ArrayList repoCommit = obj.readValue(response.body(), ArrayList.class);
-                if (repoCommit.size() == 0) {
-                    stringBuilder.setLength(0);
-
-                    stringBuilder.append(userCommitUrl);
-                    stringBuilder.append(userGithubId);
-                    stringBuilder.append("/");
-                    stringBuilder.append(hashMap.get("name"));
-                    stringBuilder.append("/commits?page=");
-                    int pageNum = 1; // 한번의 통신에 최대 3o개의 commit 만 불러올 수 있음
-                    while (true) {
-                        //api 통신 - user 의 Repository 의 commit 가져오기
-                        request = HttpRequest.newBuilder()
-                                .uri(URI.create(stringBuilder.toString() + pageNum))
-                                .header("Content-Type", "application/json")
-                                .header("Authorization", "token {gitToken}")
-                                .method("GET", HttpRequest.BodyPublishers.noBody())
-                                .build();
-                        response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-                        repoCommit = obj.readValue(response.body(), ArrayList.class);
-                        if (repoCommit.size() == 30) {
-                            sum += 30;
-                            pageNum++;
-                        } else {
-                            sum += repoCommit.size();
-                            pageNum = 1;
-                            break;
-                        }
-                    }
-                } else {
-                    LinkedHashMap contributions = (LinkedHashMap) repoCommit.get(0);
-                    sum += (int)contributions.get("contributions");
-                }
+            //repo owner 찾기
+            PagedIterable<GHRepository.Contributor> contributors = repository.listContributors();
+            String repoOwner = contributors.toList().get(0).getLogin();
+            
+            //fork repo 제외
+            if (repoOwner.equals(userGitName)) {
+                commitCount += repository.listCommits().toList().size();
             }
-            long afterTime = System.currentTimeMillis();
-            log.info("commit 수 {}",sum);
-            log.info("commit 수 불러오는데 걸리는 시간 {}.{}초",(afterTime - beforeTime)/1000,(afterTime - beforeTime)%1000);
-        } catch (Exception e) {
-            return null;
         }
-        return new GithubInfo(userGithubId,sum);
+
+        return commitCount;
     }
 }

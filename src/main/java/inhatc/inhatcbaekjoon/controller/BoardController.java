@@ -18,12 +18,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/board")
+    @GetMapping("")
     public String BoardList(
             @ModelAttribute("boardSearch") BoardSearch boardSearch,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -31,24 +32,24 @@ public class BoardController {
         List<BoardEntity> boards = boardService.findByValue(boardSearch);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("boards", boards);
-        return "/board/boardMain";
+        return "board/boardMain";
     }
 
-    @GetMapping("/board/writing")
+    @GetMapping("/writing")
     public String createBoard(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("BoardFrom", new BoardForm());
-        return "/board/boardWriting";
+        return "board/boardWriting";
     }
 
-    @PostMapping("/board/writing")
+    @PostMapping("/writing")
     public String createBoard(@Valid BoardForm boardForm, BindingResult result) {
         BoardEntity boardEntity = new BoardEntity(boardForm.getTitle(), boardForm.getContent(), boardForm.getCategory());
         boardService.join(boardEntity);
         return "redirect:/board";
     }
 
-    @GetMapping("/board/{id}")
+    @GetMapping("/{id}")
     public String viewBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id, Model model
@@ -56,10 +57,10 @@ public class BoardController {
         Optional<BoardEntity> board = boardService.findById(id);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("board", board.get());
-        return "/board/viewBoard";
+        return "board/viewBoard";
     }
 
-    @GetMapping("/board/modify/{id}")
+    @GetMapping("/modify/{id}")
     public String modifyBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long id, Model model
@@ -67,10 +68,10 @@ public class BoardController {
         Optional<BoardEntity> board = boardService.findById(id);
         model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("board", board.get());
-        return "/board/modifyBoard";
+        return "board/modifyBoard";
     }
 
-    @PutMapping("/board/modify/{id}")
+    @PutMapping("/modify/{id}")
     public String modifyBoard(@PathVariable Long id,
                               @RequestParam String title,
                               @RequestParam String content,
@@ -83,7 +84,7 @@ public class BoardController {
         return "redirect:/board";
     }
 
-    @DeleteMapping("/board/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteBoard(@PathVariable Long id) {
         boardService.deleteById(id);
         return "redirect:/board";
