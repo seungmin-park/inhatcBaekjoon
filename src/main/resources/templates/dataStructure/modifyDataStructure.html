@@ -6,7 +6,7 @@
 </head>
 <body>
 <div  class="container" th:object="${username}">
-  <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
+  <div th:replace="fragments/bodyHeader :: bodyHeader" />
   <div class="jumbotron text-center" th:object="${structure}">
     <form th:action="@{'/view/modify/dataStructure/'+ ${structure.name}}" th:method="post">
       <input type="hidden" name="_method" value="put"/>

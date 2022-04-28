@@ -27,17 +27,14 @@ public class BoardController {
     @GetMapping("")
     public String BoardList(
             @ModelAttribute("boardSearch") BoardSearch boardSearch,
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
             Model model) {
         List<BoardEntity> boards = boardService.findByValue(boardSearch);
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("boards", boards);
         return "board/boardMain";
     }
 
     @GetMapping("/writing")
-    public String createBoard(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        model.addAttribute("username", principalDetails.getUsername());
+    public String createBoard(Model model) {
         model.addAttribute("BoardFrom", new BoardForm());
         return "board/boardWriting";
     }
@@ -50,23 +47,15 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String viewBoard(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable Long id, Model model
-    ) {
+    public String viewBoard(@PathVariable Long id, Model model) {
         Optional<BoardEntity> board = boardService.findById(id);
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("board", board.get());
         return "board/viewBoard";
     }
 
     @GetMapping("/modify/{id}")
-    public String modifyBoard(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable Long id, Model model
-    ) {
+    public String modifyBoard(@PathVariable Long id, Model model) {
         Optional<BoardEntity> board = boardService.findById(id);
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("board", board.get());
         return "board/modifyBoard";
     }

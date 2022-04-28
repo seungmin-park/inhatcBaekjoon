@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container" th:object="${username}">
-    <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div th:object="${board}">
         제목 : <span th:text="${board.title}"></span> <br>
         내용 : <span th:text="${board.content}"></span> <br>

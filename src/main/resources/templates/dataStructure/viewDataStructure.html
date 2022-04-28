@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header :: header" />
 <body>
 <div class="container" th:object="${username}">
-    <div th:replace="fragments/bodyHeader :: bodyHeader(${username})" />
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div>
         <div class="form-group">
         </div>
@@ -12,13 +12,13 @@
             <tr>
                 <td>알고리즘 종류</td>
             </tr>
-            <tr th:if="${userRole.equals('ROLE_ADMIN')}">
+            <tr sec:authorize="hasRole('ROLE_ADMIN')">
                 <td>
                     <a th:href="@{'modify/dataStructure/'+${structure.name}}" th:text="${structure.name}"></a>
                 </td>
             </tr>
             <tr>
-                <td th:unless="${userRole.equals('ROLE_ADMIN')}" th:text="${structure.name}"></td>
+                <td sec:authorize="hasRole('ROLE_MEMBER')" th:text="${structure.name}"></td>
             </tr>
             <tr>
                 <td>알고리즘 설명</td>

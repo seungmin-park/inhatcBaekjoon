@@ -33,37 +33,25 @@ public class RankingController {
     private final UniversityService universityService;
 
     @GetMapping("")
-    public String rankInfo(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            Model model
-    ) throws IOException, InterruptedException {
+    public String rankInfo(Model model) throws IOException, InterruptedException {
         University university = solvedApi.universityRank();
         universityService.join(university);
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("university", university);
         return "rank/universityrankInfo";
     }
 
     @SneakyThrows
     @GetMapping("/daily")
-    public String dailyRank(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            Model model
-    ) {
+    public String dailyRank(Model model) {
         baekJoonService.dailySolvedCount();
         List<Member> members = memberService.findAllByOrderByTodaySolvedCountDesc();
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("members", members);
         return "rank/dailyrank";
     }
 
     @GetMapping("/commit")
-    public String gitCommitRank(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            Model model
-    ){
+    public String gitCommitRank(Model model){
         List<Member> members = memberService.findAllByOrderByCommitCountDesc();
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("members", members);
         return "rank/githubCommitRank";
     }

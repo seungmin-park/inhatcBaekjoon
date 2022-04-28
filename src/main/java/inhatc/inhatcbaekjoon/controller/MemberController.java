@@ -83,13 +83,9 @@ public class MemberController {
     }
 
     @GetMapping("")
-    public String list(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            Model model
-    ) throws IOException, InterruptedException {
+    public String list(Model model) throws IOException, InterruptedException {
         List<Member> members = memberService.findAllByRatingDesc();
         baekJoonService.dailySolvedCount();
-        model.addAttribute("username", principalDetails.getUsername());
         model.addAttribute("members", members);
 
         return "members/memberList";
